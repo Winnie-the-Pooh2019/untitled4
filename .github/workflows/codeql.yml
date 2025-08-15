@@ -44,6 +44,7 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         source-root: ./src
+        config-file: ./.github/codeql/codeql-config.yml
 
     - name: Perform CodeQL Analysis for (${{ matrix.language }})
       uses: github/codeql-action/analyze@v3
