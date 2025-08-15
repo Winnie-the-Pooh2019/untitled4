@@ -9,4 +9,15 @@ public class Main {
 
         System.out.println("Hello, " + name);
     }
+
+    public static void printName(String name) {
+        if (name != null) {
+            System.out.println("Hello, " + name);
+        }
+    }
+}
+
+class Person {
+    public String name;
+    public int age;
 }
