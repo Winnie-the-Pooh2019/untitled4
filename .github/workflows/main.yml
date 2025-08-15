@@ -1,4 +1,4 @@
-name: Сборка проекта при запросе на слияние
+name: Build check on pull request
 on:
   pull_request:
     branches: ["master"]
@@ -6,9 +6,6 @@ jobs:
   build-test:
     name: Check build
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      checks: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,15 +16,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Create Manifest
-        run: |
-          echo -e "Main-Class: Main\n" > Manifest.txt
-
       - name: Compile java files
         run: |
           mkdir -p classes
           javac -d classes $(find ./src -name "*.java") || exit 1
-          
-      - name: Create .jar file
-        run: |
-          jar cvfm app.jar Manifest.txt -C classes . || exit 1
