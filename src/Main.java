@@ -15,6 +15,14 @@ public class Main {
             System.out.println("Hello, " + name);
         }
     }
+
+    private String getPersonName(Person person) {
+        if (person != null) {
+            return person.name;
+        } else {
+            return null;
+        }
+    }
 }
 
 class Person {
