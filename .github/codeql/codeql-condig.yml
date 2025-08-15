@@ -1,3 +1,0 @@
-name: "CodeQL Config"
-paths:
-  - '**/*.java'  # Include all Java files
