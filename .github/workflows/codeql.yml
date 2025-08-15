@@ -1,4 +1,4 @@
-name: "CodeQL check"
+name: "CodeQL Advanced check"
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   analyze:
-    name: Perform (${{ matrix.language }}) analyzis 
+    name: Analyze (${{ matrix.language }})
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     permissions:
       # required for all workflows
@@ -16,38 +16,33 @@ jobs:
       packages: write
       actions: write
       contents: write
+
     strategy:
       fail-fast: false
       matrix:
-        language: ['java-kotlin']
-        
+        include:
+        - language: actions
+          build-mode: none
+        - language: java-kotlin
+          build-mode: manual # This mode only analyzes Java. Set this to 'autobuild' or 'manual' to analyze Kotlin too.
+   
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-
-    - name: Compile Java files
-      run: |
-        mkdir -p build
-        javac -d build $(find ./src -name "*.java")
-      continue-on-error: true
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        source-root: ./src
-        config-file: ./.github/codeql/codeql-condig.yml
+        build-mode: ${{ matrix.build-mode }}
 
-    - name: Perform CodeQL Analysis for (${{ matrix.language }})
+    - if: matrix.build-mode == 'manual'
+      shell: bash
+      run: |
+        mkdir -p build
+        javac -d build $(find ./src -name "*.java")
+
+    - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
-
