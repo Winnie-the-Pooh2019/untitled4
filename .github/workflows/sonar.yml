@@ -1,4 +1,4 @@
-name: Sonar analyzis
+name: Sonar analysis
 on:
   push:
     branches:
