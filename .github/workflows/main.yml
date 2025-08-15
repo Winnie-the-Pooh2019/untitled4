@@ -6,6 +6,9 @@ jobs:
   build-test:
     name: Check build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -23,8 +26,8 @@ jobs:
       - name: Compile java files
         run: |
           mkdir -p classes
-          javac -d classes $(find ./src -name "*.java")
+          javac -d classes $(find ./src -name "*.java") || exit 1
           
       - name: Create .jar file
         run: |
-          jar cvfm app.jar Manifest.txt -C classes .
+          jar cvfm app.jar Manifest.txt -C classes . || exit 1
